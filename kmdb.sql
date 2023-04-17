@@ -115,7 +115,7 @@ DROP TABLE IF EXISTS moviecharacters;
 CREATE TABLE movies 
     (
         id integer primary key autoincrement
-        ,movie_name text
+        ,movie_title text
         ,year_release integer
         ,mpaa_rating text
         ,studios_id text
@@ -136,9 +136,9 @@ CREATE TABLE actors
 CREATE TABLE moviecharacters
     (
         id integer primary key autoincrement
+        ,character_name text
         ,movies_id integer
         ,actors_id integer
-        ,character_name text
     );
 
 
@@ -146,18 +146,53 @@ CREATE TABLE moviecharacters
 -- Use hard-coded foreign key IDs when necessary
 -- TODO!
 INSERT INTO movies 
-        (movie_name, year_release, mpaa_rating, studios_id) 
+        (movie_title, year_release, mpaa_rating, studios_id) 
     values 
         ("Batman Begins", 2005, "PG-13", 1),
         ("The Dark Knight", 2008, "PG-13", 1),
-        ("The Dark Knight Rises", 2012 , "PG-13", 1)
-    ;
+        ("The Dark Knight Rises", 2012 , "PG-13", 1);
 
 INSERT INTO studios
         (studio_name)
     values
-        ("Warner Bros.")
-    ;
+        ("Warner Bros.");
+
+INSERT INTO actors
+        (actor_name)
+    values
+        ("Christian Bale"),
+        ("Michael Caine"),
+        ("Liam Neeson"),
+        ("Katie Holmes"),
+        ("Gary Oldman"),
+        ("Heath Ledger"),
+        ("Aaron Eckhart"),
+        ("Maggie Gyllenhaal"),
+        ("Tom Hardy"),
+        ("Joseph Gordon-Levitt"),
+        ("Anne Hathaway");
+     
+INSERT INTO moviecharacters
+    (character_name, movies_id, actors_id)
+    values
+        ("Bruce Wayne", 1, 1),
+        ("Alfred", 1, 2),
+        ("Ra's Al Ghul", 1, 3),
+        ("Rachel Dawes", 1, 4),
+        ("Commissioner Gordon", 1, 5),
+        ("Bruce Wayne", 2, 1),
+        ("Joker", 2, 6),
+        ("Harvey Dent", 2, 7),
+        ("Alred", 2, 2),
+        ("Rachel Dawes", 2, 8),
+        ("Commissioner Gordon", 2, 5),
+        ("Bruce Wayne", 3, 1),
+        ("Commissioner Gordon", 3, 5),
+        ("Alred", 3, 2),
+        ("Bane", 3, 9),
+        ("John Blake", 3, 10),
+        ("Seline Kyle", 3, 11);
+
 
 -- Prints a header for the movies output
 .print "Movies"
@@ -167,7 +202,7 @@ INSERT INTO studios
 -- The SQL statement for the movies output
 -- TODO!
 SELECT 
-    a.movie_name
+    a.movie_title
     ,a.year_release
     ,a.mpaa_rating
     ,b.studio_name  
@@ -181,6 +216,15 @@ LEFT JOIN studios as b
 .print "========"
 .print ""
 
-
 -- The SQL statement for the cast output
 -- TODO!
+SELECT 
+    a.movie_title
+    ,c.actor_name
+    ,b.character_name
+FROM movies as a
+LEFT JOIN moviecharacters as b
+    ON a.id = b.movies_id
+LEFT JOIN actors as c
+    ON b.actors_id = c.id
+ORDER BY a.movie_title, b.actors_id;
